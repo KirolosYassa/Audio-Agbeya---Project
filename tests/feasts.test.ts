@@ -1,7 +1,8 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { gregorianToJd as J, jdToGregorian } from '../src/core/dates';
-import { eventsOn, orthodoxEasterJd } from '../src/core/feasts';
+import { gregorianToJd as J, jdToGregorian } from '../src/core/calendar/gregorian';
+import { orthodoxEasterJd } from '../src/core/feasts/easter';
+import { eventsOn } from '../src/core/feasts/events';
 
 const ymd = (jd: number) => { const g = jdToGregorian(jd); return `${g.year}-${String(g.month).padStart(2, '0')}-${String(g.day).padStart(2, '0')}`; };
 const names = (y: number, m: number, d: number) => eventsOn(J(y, m, d)).map(e => e.name + (e.edge ? `[${e.edge}]` : ''));

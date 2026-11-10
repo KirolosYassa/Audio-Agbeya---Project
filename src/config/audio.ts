@@ -6,9 +6,13 @@ export const AUDIO_BASE_URL = (process.env.EXPO_PUBLIC_AUDIO_BASE_URL ?? '').rep
 export const isAudioHostConfigured = AUDIO_BASE_URL.length > 0;
 
 /** Encoding used for the hosted files (mono MP3). Used for the size estimate and the download sanity check. */
-export const AUDIO_BITRATE_KBPS = 64;
+const AUDIO_BITRATE_KBPS = 64;
+const BYTES_PER_KILOBIT = 125;
 
 export const audioUrl = (hourId: string): string => `${AUDIO_BASE_URL}/${hourId}.mp3`;
 
 /** Expected file size in bytes for a recording of the given length. */
-export const expectedBytes = (seconds: number): number => Math.round(seconds * AUDIO_BITRATE_KBPS * 125);
+export const expectedBytes = (seconds: number): number => Math.round(seconds * AUDIO_BITRATE_KBPS * BYTES_PER_KILOBIT);
+
+/** Expected download size in whole megabytes (never less than 1), for showing to the person. */
+export const expectedMegabytes = (seconds: number): number => Math.max(1, Math.round(expectedBytes(seconds) / 1e6));

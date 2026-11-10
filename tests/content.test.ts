@@ -3,7 +3,10 @@ import { test } from 'node:test';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import type { HourData } from '../src/core/types';
-import { blockIndexAt, formatTime, navIndexOf, nextTarget, previousTarget, shouldRestore } from '../src/core/playback';
+import { formatTime } from '../src/core/formatTime';
+import { blockIndexAt, navIndexOf } from '../src/core/playback/blocks';
+import { shouldRestore } from '../src/core/playback/resume';
+import { nextTarget, previousTarget } from '../src/core/playback/seek';
 
 const IDS = ['prime', 'terce', 'sext', 'none', 'vespers', 'compline', 'mid1', 'mid2', 'mid3'];
 const load = (id: string): HourData => JSON.parse(readFileSync(join(__dirname, '../src/data/content', id + '.json'), 'utf8'));

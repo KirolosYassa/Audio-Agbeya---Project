@@ -33,5 +33,5 @@ Audio download and playback, seeking, 1–3x speed, background/lock-screen playb
 ## Learning the framework fast (vibe-coding friendly)
 1. Do Expo's official "Create your first app" tutorial once (about 2 hours), to see components, styles and Expo Router.
 2. Read this project in the order of the folder map in README.md; every function does one job.
-3. Change one small thing at a time (a colour in `src/ui/theme.tsx`, a label in `src/ui/reader/DownloadPanel.tsx`) and watch the phone reload.
+3. Change one small thing at a time (a colour in `src/ui/theme/palettes.ts`, a label in `src/ui/reader/DownloadPanel.tsx`) and watch the phone reload.
 4. Ask Claude for changes with the file name; run `npm run typecheck && npm test` after each change.

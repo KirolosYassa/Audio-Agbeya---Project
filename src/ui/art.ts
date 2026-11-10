@@ -2,7 +2,7 @@
 import type { HourArt } from '../core/types';
 
 const gradient = (id: string, a: string, b: string): string => `<linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient>`;
-export const ART: Record<HourArt, string> = {
+const ART: Record<HourArt, string> = {
   sunrise: `<defs>${gradient('g1', '#f5cd72', '#b8511f')}</defs><rect width="100" height="100" fill="url(#g1)"/><g stroke="#fff3c9" stroke-width="3" stroke-linecap="round"><path d="M50 18v10M24 30l7 7M76 30l-7 7M12 52h10M78 52h10"/></g><circle cx="50" cy="60" r="20" fill="#fff3c9"/><path d="M0 66q25-12 50-2t50-4v40H0z" fill="#5a2a14"/><path d="M0 80q30-10 55-2t45-4v26H0z" fill="#3a1b0d"/>`,
   flame: `<defs>${gradient('g2', '#8a1a1c', '#3a0a0b')}</defs><rect width="100" height="100" fill="url(#g2)"/><path d="M50 14c8 14 22 22 22 42a22 22 0 0 1-44 0c0-10 6-16 10-22 2 8 6 10 8 10-2-12-2-20 4-30z" fill="#f2b84b"/><path d="M50 46c4 8 12 12 12 22a12 12 0 0 1-24 0c0-6 4-10 6-14 1 4 4 6 5 6-1-6-1-9 1-14z" fill="#fff0c0"/>`,
   cross: `<defs>${gradient('g3', '#4a3322', '#1f140e')}</defs><rect width="100" height="100" fill="url(#g3)"/><g fill="#e8c070"><rect x="43" y="14" width="14" height="72" rx="2"/><rect x="18" y="40" width="64" height="14" rx="2"/><circle cx="50" cy="14" r="5"/><circle cx="50" cy="86" r="5"/><circle cx="18" cy="47" r="5"/><circle cx="82" cy="47" r="5"/></g>`,
@@ -12,3 +12,6 @@ export const ART: Record<HourArt, string> = {
   veil: `<defs>${gradient('g7', '#8a1a1c', '#4a0b0d')}</defs><rect width="100" height="100" fill="url(#g7)"/><g fill="#5e0f11" opacity=".55"><rect x="12" y="16" width="12" height="80"/><rect x="36" y="16" width="12" height="80"/><rect x="60" y="16" width="12" height="80"/><rect x="82" y="16" width="8" height="80"/></g><rect x="6" y="12" width="88" height="6" rx="3" fill="#e8c070"/><circle cx="8" cy="15" r="5" fill="#e8c070"/><circle cx="92" cy="15" r="5" fill="#e8c070"/>`,
   lamp: `<defs>${gradient('g8', '#1f2c42', '#0c121e')}</defs><rect width="100" height="100" fill="url(#g8)"/><g fill="#f3e6b8"><circle cx="20" cy="22" r="2"/><circle cx="78" cy="16" r="1.8"/><circle cx="86" cy="36" r="1.5"/><circle cx="34" cy="12" r="1.5"/></g><path d="M50 22c5 8 12 12 12 22a12 12 0 0 1-24 0c0-6 3-9 6-12 1 4 3 5 4 5-1-6-1-10 2-15z" fill="#f2b84b"/><path d="M30 62h40l-6 16H36z" fill="#e8c070"/><path d="M26 62h48v5H26zM38 78h24v6H38z" fill="#c79a45"/>`
 };
+
+/** A complete SVG document for one tile, ready for SvgXml. */
+export const artSvg = (art: HourArt): string => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">${ART[art]}</svg>`;

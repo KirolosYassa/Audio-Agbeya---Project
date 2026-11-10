@@ -1,4 +1,4 @@
-/* Shapes of the prayer data produced by the alignment pipeline (data/<hour>.json in the web project). */
+/* Shapes of the data shared across the app. The prayer data comes from the alignment pipeline (data/<hour>.json in the web project). */
 
 export type BlockKind = 'prayer' | 'psalm' | 'gospel' | 'rubric' | 'intro';
 
@@ -30,3 +30,8 @@ export interface HourInfo {
   en: string;
   art: HourArt;
 }
+
+export type ThemeName = 'book' | 'night';
+
+export type DownloadStatus = 'none' | 'downloading' | 'ready';
+export interface HourDownload { status: DownloadStatus; progress: number }

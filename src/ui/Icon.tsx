@@ -2,7 +2,7 @@
 import React from 'react';
 import Svg, { Path, Text as SvgText } from 'react-native-svg';
 
-export const ICONS = {
+const ICONS = {
   back: 'M10 5l7 7-7 7-1.4-1.4L14.2 12 8.6 6.4z',
   moon: 'M12 3a9 9 0 1 0 9 9c0-.5 0-.9-.1-1.3A5.5 5.5 0 0 1 13.3 3.1 9 9 0 0 0 12 3z',
   list: 'M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z',
@@ -15,7 +15,9 @@ export const ICONS = {
   download: 'M12 3v10.2l3.6-3.6L17 11l-5 5-5-5 1.4-1.4 3.6 3.6V3zM5 18h14v2H5z'
 } as const;
 
-interface Props { name: keyof typeof ICONS; size?: number; color: string; mirror?: boolean; label?: string }
+export type IconName = keyof typeof ICONS;
+
+interface Props { name: IconName; size?: number; color: string; mirror?: boolean; label?: string }
 
 export function Icon({ name, size = 24, color, mirror, label }: Props) {
   return (

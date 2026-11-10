@@ -1,10 +1,11 @@
 /* Download state of every hour's audio, shared by the library tiles and the reader. */
 import React, { createContext, useCallback, useContext, useMemo, useRef, useState } from 'react';
-import { HOURS, getHourData, hasContent, recordingSeconds } from '../data/hours';
-import { downloadHour, isDownloaded, removeHour } from '../services/downloads';
-
-export type DownloadStatus = 'none' | 'downloading' | 'ready';
-export interface HourDownload { status: DownloadStatus; progress: number }
+import { recordingSeconds } from '../core/hours';
+import type { HourDownload } from '../core/types';
+import { getHourData, hasContent } from '../data/content';
+import { HOURS } from '../data/hours';
+import { downloadHour } from '../services/audioDownload';
+import { isDownloaded, removeHour } from '../services/audioFiles';
 
 interface DownloadsApi {
   of(hourId: string): HourDownload;
@@ -13,37 +14,44 @@ interface DownloadsApi {
   remove(hourId: string): void;
 }
 
+type DownloadStates = Record<string, HourDownload>;
+
 const DownloadsContext = createContext<DownloadsApi | null>(null);
 
-const initialState = (): Record<string, HourDownload> =>
-  Object.fromEntries(HOURS.filter(h => hasContent(h.id)).map(h => [h.id, { status: isDownloaded(h.id) ? 'ready' : 'none', progress: 0 } as HourDownload]));
+const NOT_DOWNLOADED: HourDownload = { status: 'none', progress: 0 };
+const READY: HourDownload = { status: 'ready', progress: 1 };
+const downloading = (progress: number): HourDownload => ({ status: 'downloading', progress });
+
+/** Hours with content start as 'ready' when their audio file is already on the device. */
+const initialStates = (): DownloadStates =>
+  Object.fromEntries(HOURS.filter(hour => hasContent(hour.id)).map(hour => [hour.id, isDownloaded(hour.id) ? { ...NOT_DOWNLOADED, status: 'ready' as const } : NOT_DOWNLOADED]));
 
 export function DownloadsProvider({ children }: { children: React.ReactNode }) {
-  const [state, setState] = useState<Record<string, HourDownload>>(initialState);
+  const [states, setStates] = useState<DownloadStates>(initialStates);
   const controllers = useRef<Record<string, AbortController>>({});
 
-  const patch = useCallback((id: string, change: HourDownload) => setState(current => ({ ...current, [id]: change })), []);
+  const patch = useCallback((hourId: string, change: HourDownload) => setStates(current => ({ ...current, [hourId]: change })), []);
 
-  const start = useCallback(async (id: string) => {
-    const data = getHourData(id);
-    if (!data || controllers.current[id]) return;
+  const start = useCallback(async (hourId: string) => {
+    const data = getHourData(hourId);
+    if (!data || controllers.current[hourId]) return;
     const controller = new AbortController();
-    controllers.current[id] = controller;
-    patch(id, { status: 'downloading', progress: 0 });
+    controllers.current[hourId] = controller;
+    patch(hourId, downloading(0));
     try {
-      await downloadHour({ hourId: id, seconds: recordingSeconds(data), signal: controller.signal, onProgress: progress => patch(id, { status: 'downloading', progress }) });
-      patch(id, { status: 'ready', progress: 1 });
+      await downloadHour({ hourId, seconds: recordingSeconds(data), signal: controller.signal, onProgress: progress => patch(hourId, downloading(progress)) });
+      patch(hourId, READY);
     } catch (error) {
-      patch(id, { status: 'none', progress: 0 });
-      if (!controller.signal.aborted) throw error;
+      patch(hourId, NOT_DOWNLOADED);
+      if (!controller.signal.aborted) throw error; // a cancel is not an error
     } finally {
-      delete controllers.current[id];
+      delete controllers.current[hourId];
     }
   }, [patch]);
 
-  const cancel = useCallback((id: string) => controllers.current[id]?.abort(), []);
-  const remove = useCallback((id: string) => { removeHour(id); patch(id, { status: 'none', progress: 0 }); }, [patch]);
-  const of = useCallback((id: string): HourDownload => state[id] ?? { status: 'none', progress: 0 }, [state]);
+  const cancel = useCallback((hourId: string) => controllers.current[hourId]?.abort(), []);
+  const remove = useCallback((hourId: string) => { removeHour(hourId); patch(hourId, NOT_DOWNLOADED); }, [patch]);
+  const of = useCallback((hourId: string): HourDownload => states[hourId] ?? NOT_DOWNLOADED, [states]);
 
   const api = useMemo(() => ({ of, start, cancel, remove }), [of, start, cancel, remove]);
   return <DownloadsContext.Provider value={api}>{children}</DownloadsContext.Provider>;
