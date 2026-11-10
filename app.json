@@ -1,0 +1,78 @@
+{
+  "expo": {
+    "name": "الأجبية الصوتية",
+    "slug": "audio-agbeya",
+    "version": "0.1.0",
+    "scheme": "audioagbeya",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#2f4360"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.audioagbeya.app"
+    },
+    "android": {
+      "package": "com.audioagbeya.app",
+      "adaptiveIcon": {
+        "backgroundColor": "#2f4360",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false,
+      "permissions": [
+        "android.permission.MODIFY_AUDIO_SETTINGS",
+        "android.permission.FOREGROUND_SERVICE",
+        "android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK",
+        "android.permission.MODIFY_AUDIO_SETTINGS",
+        "android.permission.FOREGROUND_SERVICE",
+        "android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK"
+      ],
+      "runtimeVersion": {
+        "policy": "appVersion"
+      }
+    },
+    "web": {
+      "bundler": "metro",
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-font",
+      [
+        "expo-audio",
+        {
+          "enableBackgroundPlayback": true,
+          "microphonePermission": false,
+          "recordAudioAndroid": false
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": false
+    },
+    "extra": {
+      "router": {
+        "asyncRoutes": {
+          "web": true
+        }
+      },
+      "eas": {
+        "projectId": "4b00d72c-b4db-4ba9-982a-a5d831afbaa3"
+      }
+    },
+    "owner": "kirolosmagdyyassa",
+    "updates": {
+      "url": "https://u.expo.dev/4b00d72c-b4db-4ba9-982a-a5d831afbaa3"
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    }
+  }
+}
